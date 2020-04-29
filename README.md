@@ -1,4 +1,5 @@
 # mod3
+<<<<<<< HEAD
 
 ## Project setup
 ```
@@ -22,3 +23,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+mod3 website & API Service 
+>>>>>>> mod3-service/master
