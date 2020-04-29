@@ -1,2 +1,2 @@
-# mod3-service
-mod3 API Service
+# mod3
+mod3 website & API Service 
