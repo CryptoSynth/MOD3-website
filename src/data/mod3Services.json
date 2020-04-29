@@ -1,0 +1,26 @@
+[
+  {
+    "image": "website-card.jpg",
+    "title": "website production",
+    "subtitle": "driven by science",
+    "text": "We use psycology as our baseline, we create a workflow that redirects your customers to take action. We create hypotheses and we test them through split testing and other modern testing algorithms."
+  },
+  {
+    "image": "erp-card.jpg",
+    "title": "erp/mrp",
+    "subtitle": "business productivity & accountability",
+    "text": "Your buisness has needs. Whether it's keeping track of customers or automating work order creation, we provide custom solutions that tie all of your buisness operations together."
+  },
+  {
+    "image": "production-card.jpg",
+    "title": "production design",
+    "subtitle": "manufacturing autmation",
+    "text": "We can take your job shop or existing batch manufacturing or production line and create an automated or semi-automated workflow that boosts your production output and maximizes your product quality."
+  },
+  {
+    "image": "cad-card.jpg",
+    "title": "cad/cam/fea/cfd",
+    "subtitle": "design, simulation, & analytics",
+    "text": "Offload your design, simulation, and data analytics workload with our network of consultants. from 3D modeling to machine learning, we have the team to help support your day-to-day needs."
+  }
+]
