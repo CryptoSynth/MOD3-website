@@ -23,7 +23,7 @@
           <v-date-picker color="indigo" header-color="indigo" v-model="date">
             <v-spacer></v-spacer>
             <v-btn text color="indigo" @click="close">Cancel</v-btn>
-            <v-btn text color="indigo" @click="close">Ok</v-btn>
+            <v-btn text color="indigo" @click="submit">Ok</v-btn>
           </v-date-picker>
         </v-menu>
       </v-col>

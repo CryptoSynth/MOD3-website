@@ -10,8 +10,10 @@
 
         <v-divider></v-divider>
         <v-card-text>
-          <DatePicker />
-          <TimePicker />
+          <v-form>
+            <DatePicker />
+            <TimePicker />
+          </v-form>
         </v-card-text>
 
         <v-card-actions>

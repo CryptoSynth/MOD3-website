@@ -30,7 +30,7 @@
           >
             <v-spacer></v-spacer>
             <v-btn text color="indigo" @click="close">Cancel</v-btn>
-            <v-btn text color="indigo" @click="close">Ok</v-btn>
+            <v-btn text color="indigo" @click="submit">Ok</v-btn>
           </v-time-picker>
         </v-menu>
       </v-col>
@@ -52,6 +52,18 @@ export default {
     };
   },
   methods: {
+    submit() {
+      this.$emit("timeSelected", this.time);
+    },
+    close() {
+      if (this.time) {
+        this.timeNow = this.getInput(this.time);
+      }
+      this.timePickerMenu = !this.timePickerMenu;
+    }
+  },
+
+  computed: {
     getTime() {
       return moment().format("LT");
     },
@@ -60,17 +72,8 @@ export default {
       const joinedArray = timeArray.join("");
 
       return moment(joinedArray, "hmm").format("h:mm A");
-    },
-    close() {
-      if (this.time) {
-        this.timeNow = this.getInput(this.time);
-      }
-
-      this.timePickerMenu = !this.timePickerMenu;
     }
-  },
-
-  computed: {}
+  }
 };
 </script>
 
