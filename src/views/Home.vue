@@ -1,40 +1,46 @@
 <template>
   <div class="home">
     <!--Landing Section-->
-    <v-parallax height="700" class="parallax-height" src="@/assets/Images/mod-3-logo.jpeg">
-      <v-overlay z-index="-1" class="overlay" :absolute="true" opacity=".3"></v-overlay>
-      <v-row no-gutters align="center" justify="center">
-        <v-col class="text-center" cols="12">
-          <h1 class="header-title text-center">
-            <v-row align="center" justify="center">
-              <v-col cols="12" md="12">Modify,</v-col>
-              <v-col cols="12" md="12">Modularize</v-col>
-              <v-col cols="12" md="12">& Modernize Co.</v-col>
-            </v-row>
-          </h1>
-        </v-col>
+    <v-container class="fill-height background-logo" fluid>
+      <v-row class="fill-height" no-gutters align="center" justify="space-around">
+        <v-row align="center" justify="center">
+          <v-col class="text-center" cols="12">
+            <h1 class="header-title text-center">
+              <v-row align="center" justify="center">
+                <v-col cols="12" md="12">Modify,</v-col>
+                <v-col cols="12" md="12">Modularize</v-col>
+                <v-col cols="12" md="12">& Modernize Co.</v-col>
+              </v-row>
+            </h1>
+          </v-col>
 
-        <v-col cols="12">
-          <h1 class="header-body text-center">We are here to help your business.</h1>
-        </v-col>
+          <v-col md="12">
+            <v-img class="mx-auto" max-width="130" src="../assets/Images/background-logo.png"></v-img>
+          </v-col>
 
-        <v-row>
-          <v-col class="text-center pa-2" cols="12">
+          <v-col cols="12">
+            <h1 class="header-body text-center">We are here to help your business</h1>
+          </v-col>
+        </v-row>
+
+        <v-row align="center" justify="center">
+          <v-col class="text-center pa-2" cols="6">
             <BookUs />
           </v-col>
-          <v-col class="text-center pa-2" cols="12">
+
+          <v-col class="text-center pa-2" cols="6">
             <ContactUs />
           </v-col>
         </v-row>
       </v-row>
-    </v-parallax>
+    </v-container>
 
     <!--Card Section-->
-    <v-container class="card-background" fluid>
-      <v-row align-content="center" no-gutters justify="center" align="center">
+    <v-container fluid class="fill-height">
+      <v-row align-content="center" justify="center" align="center">
         <v-col cols="12" class="text-center">
           <h1 class="services-title mb-5">Services</h1>
-          <h3 class="services-text mb-5">
+          <h3 class="services-text">
             From custom software solutions, to offering a helping hand with
             operations, we got you covered.
           </h3>
@@ -65,33 +71,28 @@ export default {
     return {
       services: mod3Services
     };
-  },
-  methods: {}
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 //Hero Section
-.parallax-height {
+.background-logo {
+  background-color: #3f51b5;
 }
 
 //Hero Title
 .header-title {
-  font-size: 3vw;
+  font-size: 4vw;
   text-transform: uppercase;
-}
-
-.title-text {
-  padding: 0.8rem 0rem;
+  color: white;
 }
 
 //Hero Body Text
 .header-body {
   font-size: 4vw;
-}
-
-//Services Section
-.card-background {
+  color: lightgray;
+  font-style: italic;
 }
 
 //Services Title
@@ -102,7 +103,7 @@ export default {
 
 //Services Text
 .services-text {
-  font-size: 2.2vw;
+  font-size: 3.5vh;
 }
 
 /*=================================
@@ -119,17 +120,17 @@ export default {
 @media (max-width: 786px) {
   //Hero Title
   .header-title {
-    font-size: 5vh;
+    font-size: 4vh;
   }
 
   //Hero Body Text
   .header-body {
-    font-size: 4vh;
+    font-size: 5vh;
   }
 
   //Services Title
   .services-title {
-    font-size: 5vh;
+    font-size: 3vh;
   }
 
   //Services Text

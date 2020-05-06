@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app dark color="indigo" class="nav-bar">
+  <v-app-bar app dark color="white" class="nav-bar">
     <router-link to="/">
       <v-img src="@/assets/Images/mod-3-logo.png" max-width="150px" contain></v-img>
     </router-link>
@@ -13,8 +13,5 @@ export default {};
 <style lang="scss" scoped>
 .nav-bar {
   // background-image: linear-gradient(135deg, #52e5e7 10%, #130cb7 100%);
-}
-.section-1 {
-  height: 100vh;
 }
 </style>

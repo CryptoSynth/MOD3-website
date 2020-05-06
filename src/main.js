@@ -3,9 +3,13 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
-
 import upperFirst from 'lodash/upperFirst';
 import camelCase from 'lodash/camelCase';
+import Vuelidate from 'vuelidate';
+import VueSweetalert2 from 'vue-sweetalert2';
+
+Vue.use(Vuelidate);
+Vue.use(VueSweetalert2);
 
 const requireComponent = require.context(
   // The relative path of the components folder
