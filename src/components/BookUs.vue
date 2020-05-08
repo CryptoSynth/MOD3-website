@@ -99,7 +99,7 @@ export default {
     submit() {
       this.$refs.book.validate();
       axios
-        .post("https://mod3-server.herokuapp.com/add", {
+        .post("https://mod3-server.herokuapp.com/books/add", {
           email: this.email,
           date: this.date,
           startTime: moment(
@@ -116,10 +116,9 @@ export default {
             .getTime()
         })
         .then(res => {
-          const { email, date, startTime, endTime } = res.data;
+          const { date, startTime, endTime } = res.data;
 
           this.$swal({
-            title: `Thank you ${email}`,
             text: `We will see you on ${moment(date).format(
               "MM/DD/YYYY"
             )} @ ${moment(startTime).format("h:mm A")} - ${moment(
@@ -128,7 +127,7 @@ export default {
             showCloseButton: false,
             showConfirmButton: false,
             icon: "success",
-            timer: 10000000,
+            timer: 4000,
             timerProgressBar: true
           });
 
