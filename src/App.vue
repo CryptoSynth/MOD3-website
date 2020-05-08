@@ -20,7 +20,7 @@
         </v-col>
         <v-col class="text-center mt-4" cols="12">
           <v-btn outlined dark>
-            <v-icon left>mdi-phone</v-icon>1-800-MOD3
+            <v-icon left>mdi-phone</v-icon>833-696-3825
           </v-btn>
         </v-col>
       </v-row>
@@ -41,4 +41,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.v-dialog {
+  margin: 0.5rem !important;
+}
+</style>
