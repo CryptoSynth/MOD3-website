@@ -75,7 +75,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 //Hero Section
 .background-logo {
   background-color: #3f51b5;

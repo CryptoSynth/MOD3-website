@@ -1,14 +1,14 @@
 <template>
-  <v-menu
+  <v-dialog
     v-model="timePickerMenu"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
     max-width="290px"
-    min-width="290px"
+    min-wdth="290px"
   >
     <template v-slot:activator="{ on }">
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-text-field
           v-model="userTime"
           :rules="startRules"
@@ -32,7 +32,7 @@
       format="ampm"
       ampm-in-title
     ></v-time-picker>
-  </v-menu>
+  </v-dialog>
 </template>
 
 <script>

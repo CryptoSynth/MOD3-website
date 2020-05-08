@@ -1,5 +1,5 @@
 <template>
-  <v-menu
+  <v-dialog
     v-model="timePickerMenu"
     :close-on-content-click="false"
     transition="scale-transition"
@@ -8,7 +8,7 @@
     min-width="290px"
   >
     <template v-slot:activator="{ on }">
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-text-field
           v-model="userTime"
           placeholder="Choose End Time..."
@@ -32,7 +32,7 @@
       format="ampm"
       ampm-in-title
     ></v-time-picker>
-  </v-menu>
+  </v-dialog>
 </template>
 
 <script>

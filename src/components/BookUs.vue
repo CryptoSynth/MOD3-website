@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog dark v-model="bookUsMenu" persistent max-width="600px">
+    <v-dialog class="dialog-size" dark v-model="bookUsMenu" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn large min-width="130" max-width="180" v-on="on" light outlined color="white">Book Us</v-btn>
       </template>
@@ -10,7 +10,7 @@
 
         <v-divider></v-divider>
 
-        <v-card-text class="mt-5">
+        <v-card-text>
           <v-form ref="book" v-model="valid">
             <v-container fluid>
               <v-row align="center" justify="center">
@@ -33,15 +33,16 @@
                 />
                 <StartTimePicker @startTimeSent="getStartTime" />
                 <EndTimePicker @endTimeSent="getEndTime" />
-                <v-col cols="8">
+                <v-col cols="12" md="8">
                   <h3 class="mb-3">Availibility:</h3>
-                  <ul v-for="(book, index) in books" :key="book[index]">
-                    <p v-if="books">
-                      <v-icon color="red">mdi-close</v-icon>
-                      {{formatTime(book.startTime)}} - {{formatTime(book.endTime)}} @ {{formatDate(book.date)}}
-                    </p>
-                    <p />
-                  </ul>
+                  <span v-for="(book, index) in books" :key="book[index]">
+                    <v-chip v-if="books" class="ma-2" color="red" text-color="white">
+                      <v-avatar left>
+                        <v-icon>mdi-close-circle</v-icon>
+                      </v-avatar>
+                      {{formatTime(book.startTime)}} - {{formatTime(book.endTime)}}
+                    </v-chip>
+                  </span>
                 </v-col>
                 <v-spacer></v-spacer>
               </v-row>
@@ -98,13 +99,19 @@ export default {
     submit() {
       this.$refs.book.validate();
       axios
-        .post("https://sleepy-retreat-45026.herokuapp.com/books/add", {
+        .post("http://localhost:4000/books/add", {
           email: this.email,
           date: this.date,
-          startTime: moment(this.startTime, "hh:mm A")
+          startTime: moment(
+            moment(this.startTime, "HH:mm A").format("HH:mm"),
+            "HH:mm"
+          )
             .toDate()
             .getTime(),
-          endTime: moment(this.endTime, "hh:mm A")
+          endTime: moment(
+            moment(this.endTime, "HH:mm A").format("HH:mm"),
+            "HH:mm"
+          )
             .toDate()
             .getTime()
         })
@@ -115,13 +122,13 @@ export default {
             title: `Thank you ${email}`,
             text: `We will see you on ${moment(date).format(
               "MM/DD/YYYY"
-            )} @ ${moment(startTime).format("hh:mm A")} - ${moment(
+            )} @ ${moment(startTime).format("h:mm A")} - ${moment(
               endTime
-            ).format("hh:mm A")}`,
+            ).format("h:mm A")}`,
             showCloseButton: false,
             showConfirmButton: false,
             icon: "success",
-            timer: 3000,
+            timer: 10000000,
             timerProgressBar: true
           });
 
@@ -129,12 +136,12 @@ export default {
         })
         .catch(err => {
           this.$swal({
-            title: `${err.response.data}`,
+            text: `${err.response.data}`,
             showCloseButton: false,
             showConfirmButton: false,
+            timerProgressBar: true,
             icon: "error",
-            timer: 4000,
-            timerProgressBar: true
+            timer: 4000
           });
         });
     },
@@ -145,7 +152,6 @@ export default {
       this.$refs.book.reset();
       this.bookUsMenu = false;
     },
-    schedule() {},
     getDate(date) {
       this.date = date;
     },
@@ -159,7 +165,7 @@ export default {
       this.books.push(books);
     },
     formatTime(time) {
-      const timeFormatted = moment(time).format("hh:mm A");
+      const timeFormatted = moment(time).format("h:mm A");
       return timeFormatted;
     },
     formatDate(date) {
@@ -169,7 +175,7 @@ export default {
   },
   mounted() {
     axios
-      .get("https://sleepy-retreat-45026.herokuapp.com/books/")
+      .get("http://localhost:4000/books/")
       .then(res => {
         this.events = res.data;
       })

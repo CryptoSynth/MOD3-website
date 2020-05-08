@@ -1,5 +1,5 @@
 <template>
-  <v-menu
+  <v-dialog
     v-model="datePickerMenu"
     :close-on-content-click="false"
     transition="scale-transition"
@@ -31,7 +31,7 @@
       @input="submit"
       v-model="userDate"
     ></v-date-picker>
-  </v-menu>
+  </v-dialog>
 </template>
 
 <script>

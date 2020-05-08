@@ -57,4 +57,22 @@ export default {
   transform: scale(0.9);
   transition: 0.4s ease-out;
 }
+
+/*=================================
+------RESPONSIVE BREAK POINTS------
+@media (min-width: 640px){}
+ 
+@media (min-width: 768px){}
+ 
+@media (min-width: 1024px){}
+ 
+@media (min-width: 1200px){}
+===================================*/
+
+@media (max-width: 786px) {
+  //Service Card Text
+  .text-body {
+    font-size: 0.8rem;
+  }
+}
 </style>

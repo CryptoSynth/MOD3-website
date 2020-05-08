@@ -9,7 +9,7 @@
 
       <v-divider></v-divider>
 
-      <v-card-text class="mt-5">
+      <v-card-text>
         <v-form ref="contact" v-model="valid">
           <v-row>
             <v-col cols="12" md="6">
@@ -147,7 +147,7 @@ export default {
       this.$refs.contact.validate();
 
       axios
-        .post("https://sleepy-retreat-45026.herokuapp.com/add", {
+        .post("https://sleepy-retreat-45026.herokuapp.com/contacts.add", {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,
