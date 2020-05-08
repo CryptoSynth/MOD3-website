@@ -147,7 +147,7 @@ export default {
       this.$refs.contact.validate();
 
       axios
-        .post("https://sleepy-retreat-45026.herokuapp.com/contacts.add", {
+        .post("https://mod3-server.herokuapp.com/contacts/add", {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,

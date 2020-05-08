@@ -99,7 +99,7 @@ export default {
     submit() {
       this.$refs.book.validate();
       axios
-        .post("http://localhost:4000/books/add", {
+        .post("https://mod3-server.herokuapp.com/add", {
           email: this.email,
           date: this.date,
           startTime: moment(
@@ -175,7 +175,7 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:4000/books/")
+      .get("https://mod3-server.herokuapp.com/books/")
       .then(res => {
         this.events = res.data;
       })
