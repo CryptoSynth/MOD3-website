@@ -27,9 +27,6 @@ export const mutations = {
 
   CLOSE_TIME_MENU(state, close) {
     state.timeMenu = close;
-  },
-  CLOSE_TIME_MENU(state, close) {
-    state.timeMenu = close;
   }
 };
 
