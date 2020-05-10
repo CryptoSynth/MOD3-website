@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="timePickerMenu"
+    v-model="timeMenu"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
@@ -26,7 +26,7 @@
     <v-time-picker
       v-model="time"
       :allowed-minutes="allowedStep"
-      @click:minute="submit"
+      @click:minute="submitTime"
       color="indigo"
       header-color="indigo"
       format="ampm"
@@ -36,27 +36,53 @@
 </template>
 
 <script>
-import moment from "moment";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "start-time-picker",
   data() {
     return {
-      time: "",
-      userTime: "",
-      timePickerMenu: false,
       startRules: [v => !!v || "Start Time is required"]
     };
   },
   methods: {
     allowedStep: m => m % 30 === 0,
-    getInput: time => moment(time, "hh:mm").format("h:mm A"),
-    submit() {
-      this.userTime = this.getInput(this.time);
-      this.$emit("startTimeSent", this.userTime);
-      this.timePickerMenu = !this.timePickerMenu;
+    ...mapActions("book", [
+      "submitTime",
+      "updateTime",
+      "updateUserTime",
+      "updateTimeMenu"
+    ])
+  },
+
+  computed: {
+    ...mapState(["book"]),
+    time: {
+      get() {
+        return this.book.time;
+      },
+      set(time) {
+        this.updateTime(time);
+      }
     },
-    close: () => (this.timePickerMenu = !this.timePickerMenu)
+
+    userTime: {
+      get() {
+        return this.book.userTime;
+      },
+      set(userTime) {
+        this.updateUserTime(userTime);
+      }
+    },
+
+    timeMenu: {
+      get() {
+        return this.book.timeMenu;
+      },
+      set(timeMenu) {
+        this.updateTimeMenu(timeMenu);
+      }
+    }
   }
 };
 </script>
