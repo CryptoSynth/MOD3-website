@@ -16,5 +16,5 @@ export default {
 
   //Contact: POST & GET
   getContacts: () => mod3Server.get('/contacts/'),
-  postContact: (contact) => mod3Server.post('/contact/add', contact)
+  postContact: (contact) => mod3Server.post('/contacts/add', contact)
 };

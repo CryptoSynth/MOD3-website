@@ -46,7 +46,7 @@ export default {
     };
   },
   methods: {
-    allowedStep: m => m % 30 === 0,
+    allowedStep: m => m % 60 === 0,
     ...mapActions("time", [
       "submitStartTime",
       "updateTimeStart",

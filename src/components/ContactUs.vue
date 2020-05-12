@@ -1,5 +1,5 @@
 <template>
-  <v-dialog dark v-model="contactUsMenu" persistent max-width="600px">
+  <v-dialog dark v-model="contactMenu" persistent max-width="600px">
     <template v-slot:activator="{ on }">
       <v-btn min-width="130" large max-width="180" v-on="on" light outlined color="white">Contact Us</v-btn>
     </template>
@@ -83,7 +83,7 @@
         <v-btn
           :dark="valid"
           :disabled="!valid"
-          @click="submit"
+          @click="postContact"
           class="white--text"
           rounded
           color="indigo"
@@ -94,17 +94,12 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "contact-us",
   data() {
     return {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      message: "",
       firstNameRules: [
         v => !!v || "First Name is required",
         v =>
@@ -137,50 +132,121 @@ export default {
           "Invalid Phone number, try this format 123-123-1234",
         v => (v && v.length <= 20) || "Exceeded letter\\number count!"
       ],
-      messageRules: [v => (v && v.length <= 255) || "Exceeded maximum count!"],
-      valid: true,
-      contactUsMenu: false
+      messageRules: [v => (v && v.length <= 255) || "Exceeded maximum count!"]
     };
   },
+
   methods: {
-    submit() {
+    ...mapActions("contact", [
+      "updateFirstName",
+      "updateLastName",
+      "updateEmail",
+      "updatePhone",
+      "updateMessage",
+      "updateValid",
+      "updateContactMenu",
+      "close",
+      "createContact"
+    ]),
+
+    async postContact() {
       this.$refs.contact.validate();
 
-      axios
-        .post("https://mod3-server.herokuapp.com/contacts/add", {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email,
-          phone: this.phone,
-          message: this.message
-        })
-        .then(res => {
-          const { firstName, lastName } = res.data;
+      const contact = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        phone: this.phone,
+        message: this.message
+      };
 
-          this.$swal({
-            title: `Thank you! We Will be in touch soon,\n ${firstName} ${lastName}`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            icon: "success",
-            timer: 3000,
-            timerProgressBar: true
-          });
-          this.close();
-        })
-        .catch(err => {
-          this.$swal({
-            title: `${err.response.data}`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            icon: "error",
-            timer: 4000,
-            timerProgressBar: true
-          });
+      try {
+        await this.createContact(contact);
+        this.$swal({
+          title: `Thank you! We Will be in touch soon,\n ${contact.firstName} ${contact.lastName}`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          icon: "success",
+          timer: 3000,
+          timerProgressBar: true
         });
+      } catch (err) {
+        this.$swal({
+          title: `${err.response.data}`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          icon: "error",
+          timer: 4000,
+          timerProgressBar: true
+        });
+      }
+    }
+  },
+
+  computed: {
+    ...mapState(["contact"]),
+
+    firstName: {
+      get() {
+        return this.contact.firstName;
+      },
+      set(firstName) {
+        this.updateFirstName(firstName);
+      }
     },
-    close() {
-      this.$refs.contact.reset();
-      this.contactUsMenu = false;
+
+    lastName: {
+      get() {
+        return this.contact.lastName;
+      },
+      set(lastName) {
+        this.updateLastName(lastName);
+      }
+    },
+
+    email: {
+      get() {
+        return this.contact.email;
+      },
+      set(email) {
+        this.updateEmail(email);
+      }
+    },
+
+    phone: {
+      get() {
+        return this.contact.phone;
+      },
+      set(phone) {
+        this.updatePhone(phone);
+      }
+    },
+
+    message: {
+      get() {
+        return this.contact.message;
+      },
+      set(message) {
+        this.updateMessage(message);
+      }
+    },
+
+    valid: {
+      get() {
+        return this.contact.valid;
+      },
+      set(valid) {
+        this.updateValid(valid);
+      }
+    },
+
+    contactMenu: {
+      get() {
+        return this.contact.contactMenu;
+      },
+      set(contactMenu) {
+        this.updateContactMenu(contactMenu);
+      }
     }
   }
 };

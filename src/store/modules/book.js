@@ -25,10 +25,10 @@ export const actions = {
   async createBook({ dispatch }, book) {
     try {
       await FormService.postBook(book);
+      dispatch('close', false);
     } catch (err) {
       if (err) throw err;
     }
-    dispatch('close', false);
   },
 
   async getBooks({ commit }) {

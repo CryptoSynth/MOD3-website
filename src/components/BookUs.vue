@@ -87,7 +87,6 @@ export default {
     return {
       times: [],
       availabilityTimes: [],
-      //add avaiable times, create a function with time ranges, use logic to strikethrough already shceduled times
       emailRules: [
         v => !!v || "Email is required",
         v =>
