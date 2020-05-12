@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="timeMenu"
+    v-model="timeMenuStart"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-col cols="12" md="6">
         <v-text-field
-          v-model="userTime"
+          v-model="startTime"
           :rules="startRules"
           placeholder="Choose Start Time..."
           color="indigo"
@@ -24,9 +24,9 @@
     </template>
 
     <v-time-picker
-      v-model="time"
+      v-model="timeStart"
       :allowed-minutes="allowedStep"
-      @click:minute="submitTime"
+      @click:minute="submitStartTime"
       color="indigo"
       header-color="indigo"
       format="ampm"
@@ -47,40 +47,41 @@ export default {
   },
   methods: {
     allowedStep: m => m % 30 === 0,
-    ...mapActions("book", [
-      "submitTime",
-      "updateTime",
-      "updateUserTime",
-      "updateTimeMenu"
+    ...mapActions("time", [
+      "submitStartTime",
+      "updateTimeStart",
+      "updateStartTime",
+      "updateTimeMenuStart"
     ])
   },
 
   computed: {
-    ...mapState(["book"]),
-    time: {
+    ...mapState(["time"]),
+
+    timeStart: {
       get() {
-        return this.book.time;
+        return this.time.timeStart;
       },
-      set(time) {
-        this.updateTime(time);
+      set(timeStart) {
+        this.updateTimeStart(timeStart);
       }
     },
 
-    userTime: {
+    startTime: {
       get() {
-        return this.book.userTime;
+        return this.time.startTime;
       },
-      set(userTime) {
-        this.updateUserTime(userTime);
+      set(startTime) {
+        this.updateStartTime(startTime);
       }
     },
 
-    timeMenu: {
+    timeMenuStart: {
       get() {
-        return this.book.timeMenu;
+        return this.time.timeMenuStart;
       },
-      set(timeMenu) {
-        this.updateTimeMenu(timeMenu);
+      set(timeMenuStart) {
+        this.updateTimeMenuStart(timeMenuStart);
       }
     }
   }

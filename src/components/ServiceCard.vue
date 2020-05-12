@@ -29,11 +29,7 @@
 <script>
 export default {
   name: "service-card",
-  props: ["service", "elevated"],
-  data() {
-    return {};
-  },
-  methods: {}
+  props: ["service", "elevated"]
 };
 </script>
 

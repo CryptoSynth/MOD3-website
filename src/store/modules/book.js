@@ -1,55 +1,53 @@
-import moment from 'moment';
+import FormService from '../../MOD3-Server/FormService';
 
 export const namespaced = true;
 
 export const state = {
-  time: '',
-  userTime: '',
-  timeMenu: false
+  books: [],
+  bookMenu: false,
+  valid: '',
+  email: ''
 };
 
 export const mutations = {
-  UPDATE_TIME(state, time) {
-    state.time = time;
-  },
+  UPDATE_BOOK_MENU: (state, bookMenu) => (state.bookMenu = bookMenu),
 
-  UPDATE_USER_TIME(state, userTime) {
-    state.userTime = userTime;
-  },
+  UPDATE_VALID: (state, valid) => (state.valid = valid),
 
-  UPDATE_TIME_MENU(state, timeMenu) {
-    state.timeMenu = timeMenu;
-  },
+  UPDATE_EMAIL: (state, email) => (state.email = email),
 
-  SET_TIME(state, time) {
-    state.userTime = time;
-  },
+  SET_BOOKS: (state, books) => (state.books = books),
 
-  CLOSE_TIME_MENU(state, close) {
-    state.timeMenu = close;
-  }
+  CLOSE_BOOK_MENU: (state, close) => (state.bookMenu = close)
 };
 
 export const actions = {
-  submitTime({ commit, getters }) {
-    commit('SET_TIME', getters.formatTimeInput);
-    commit('CLOSE_TIME_MENU', false);
-    // this.$emit('endTimeSent', this.userTime);
+  async createBook({ dispatch }, book) {
+    try {
+      await FormService.postBook(book);
+    } catch (err) {
+      if (err) throw err;
+    }
+    dispatch('close', false);
   },
 
-  updateTime({ commit }, time) {
-    commit('UPDATE_TIME', time);
+  async getBooks({ commit }) {
+    try {
+      const books = await FormService.getBooks();
+      commit('SET_BOOKS', books.data);
+    } catch (err) {
+      if (err) throw err;
+    }
   },
 
-  updateUserTime({ commit }, userTime) {
-    commit('UPDATE_USER_TIME', userTime);
-  },
+  close: ({ commit }) => commit('CLOSE_BOOK_MENU', false),
 
-  updateTimeMenu({ commit }, timeMenu) {
-    commit('UPDATE_TIME_MENU', timeMenu);
-  }
+  updateBookMenu: ({ commit }, bookMenu) =>
+    commit('UPDATE_BOOK_MENU', bookMenu),
+
+  updateValid: ({ commit }, valid) => commit('UPDATE_VALID', valid),
+
+  updateEmail: ({ commit }, email) => commit('UPDATE_EMAIL', email)
 };
 
-export const getters = {
-  formatTimeInput: (state) => moment(state.time, 'hh:mm').format('h:mm A')
-};
+export const getters = {};

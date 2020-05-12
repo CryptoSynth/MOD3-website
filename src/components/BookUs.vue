@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog class="dialog-size" dark v-model="bookUsMenu" persistent max-width="600px">
+    <v-dialog class="dialog-size" dark v-model="bookMenu" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn large min-width="130" max-width="180" v-on="on" light outlined color="white">Book Us</v-btn>
       </template>
@@ -25,25 +25,33 @@
                     v-model="email"
                   ></v-text-field>
                 </v-col>
-                <DatePicker
-                  @reset="reset"
-                  @booksSent="getBooks"
-                  :events="events"
-                  @dateSent="getDate"
-                />
-                <StartTimePicker @startTimeSent="getStartTime" />
-                <EndTimePicker @endTimeSent="getEndTime" />
-                <v-col cols="12" md="8">
-                  <h3 class="mb-3">Availibility:</h3>
-                  <span v-for="(book, index) in books" :key="book[index]">
-                    <v-chip v-if="books" class="ma-2" color="red" text-color="white">
-                      <v-avatar left>
-                        <v-icon>mdi-close-circle</v-icon>
-                      </v-avatar>
-                      {{formatTime(book.startTime)}} - {{formatTime(book.endTime)}}
-                    </v-chip>
-                  </span>
-                </v-col>
+
+                <DatePicker :availabilityTimes="availabilityTimes" />
+
+                <StartTimePicker />
+
+                <EndTimePicker />
+
+                <v-row align="center" justify="center" no-gutters>
+                  <v-col cols="12">
+                    <h3 class="mb-3">Availibility:</h3>
+                    <span v-for="(available, index) in availabilityTimes" :key="available">
+                      <v-chip
+                        small
+                        class="ma-2"
+                        :color="date.isBusy[index] ? 'red' : 'green'"
+                        text-color="white"
+                      >
+                        <v-avatar left>
+                          <v-icon v-if="date.isBusy[index]" small>mdi-close-circle</v-icon>
+                          <v-icon v-else small>mdi-check-circle</v-icon>
+                        </v-avatar>
+                        {{available}}
+                      </v-chip>
+                    </span>
+                  </v-col>
+                </v-row>
+
                 <v-spacer></v-spacer>
               </v-row>
             </v-container>
@@ -53,7 +61,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn outlined dark color="red" rounded @click="close">cancel</v-btn>
-          <v-btn :dark="valid" color="indigo" rounded :disabled="!valid" @click="submit">submit</v-btn>
+          <v-btn :dark="valid" color="indigo" rounded :disabled="!valid" @click="postBook">submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -64,8 +72,9 @@
 import DatePicker from "@/components/DatePicker.vue";
 import StartTimePicker from "@/components/StartTimePicker.vue";
 import EndTimePicker from "@/components/EndTimePicker.vue";
-import axios from "axios";
 import moment from "moment";
+
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "book-us",
@@ -76,13 +85,9 @@ export default {
   },
   data() {
     return {
+      times: [],
+      availabilityTimes: [],
       //add avaiable times, create a function with time ranges, use logic to strikethrough already shceduled times
-      email: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      events: [],
-      books: [],
       emailRules: [
         v => !!v || "Email is required",
         v =>
@@ -90,97 +95,116 @@ export default {
             v
           ) || "Not a valid email",
         v => (v && v.length <= 50) || "Exceeded letter\\number count!"
-      ],
-      valid: true,
-      bookUsMenu: false
+      ]
     };
   },
+
   methods: {
-    submit() {
+    ...mapActions("book", [
+      "createBook",
+      "getBooks",
+      "updateBookMenu",
+      "updateValid",
+      "updateEmail",
+      "close"
+    ]),
+
+    timeRange() {
+      for (let i = 1; i <= 24; i++) {
+        this.times.push(moment(i, "H").format("hh:mm A"));
+      }
+
+      let rangeTimes = [...this.times];
+
+      for (let i = 0; i < this.times.length / 2; i++) {
+        const range = rangeTimes.splice(0, 2).join(" - ");
+        rangeTimes.push(range);
+      }
+
+      rangeTimes.forEach(time => {
+        this.availabilityTimes.push(time);
+      });
+    },
+
+    formatTime: time => moment(time).format("h:mm A"),
+
+    async postBook() {
       this.$refs.book.validate();
-      axios
-        .post("https://mod3-server.herokuapp.com/books/add", {
-          email: this.email,
-          date: this.date,
-          startTime: moment(
-            moment(this.startTime, "HH:mm A").format("HH:mm"),
-            "HH:mm"
-          )
-            .toDate()
-            .getTime(),
-          endTime: moment(
-            moment(this.endTime, "HH:mm A").format("HH:mm"),
-            "HH:mm"
-          )
-            .toDate()
-            .getTime()
-        })
-        .then(res => {
-          const { date, startTime, endTime } = res.data;
 
-          this.$swal({
-            text: `We will see you on ${moment(date).format(
-              "MM/DD/YYYY"
-            )} @ ${moment(startTime).format("h:mm A")} - ${moment(
-              endTime
-            ).format("h:mm A")}`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            icon: "success",
-            timer: 4000,
-            timerProgressBar: true
-          });
+      const book = {
+        email: this.email,
+        date: moment(this.date.date, "MM/DD/YYYY").format("YYYY-MM-DD"),
+        startTime: moment(this.time.startTime, "hh:mm A")
+          .toDate()
+          .getTime(),
+        endTime: moment(this.time.endTime, "hh:mm A")
+          .toDate()
+          .getTime()
+      };
 
-          this.close();
-        })
-        .catch(err => {
-          this.$swal({
-            text: `${err.response.data}`,
-            showCloseButton: false,
-            showConfirmButton: false,
-            timerProgressBar: true,
-            icon: "error",
-            timer: 4000
-          });
+      try {
+        await this.createBook(book);
+        this.$swal({
+          text: `We will see you on ${moment(book.date).format(
+            "MM/DD/YYYY"
+          )} @ ${moment(book.startTime).format("h:mm A")} - ${moment(
+            book.endTime
+          ).format("h:mm A")}`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          icon: "success",
+          timer: 4000,
+          timerProgressBar: true
         });
-    },
-    reset() {
-      this.books = [];
-    },
-    close() {
-      this.$refs.book.reset();
-      this.bookUsMenu = false;
-    },
-    getDate(date) {
-      this.date = date;
-    },
-    getStartTime(start) {
-      this.startTime = start;
-    },
-    getEndTime(end) {
-      this.endTime = end;
-    },
-    getBooks(books) {
-      this.books.push(books);
-    },
-    formatTime(time) {
-      const timeFormatted = moment(time).format("h:mm A");
-      return timeFormatted;
-    },
-    formatDate(date) {
-      const timeFormatted = moment(date, "YYYY-MM-DD").format("MM/DD/YYYY");
-      return timeFormatted;
+      } catch (err) {
+        this.$swal({
+          text: `${err.response.data}`,
+          showCloseButton: false,
+          showConfirmButton: false,
+          timerProgressBar: true,
+          icon: "error",
+          timer: 4000
+        });
+      }
     }
   },
-  mounted() {
-    axios
-      .get("https://mod3-server.herokuapp.com/books/")
-      .then(res => {
-        this.events = res.data;
-      })
-      .catch(err => {
-        alert(err.message);
-      });
+
+  computed: {
+    ...mapState(["book", "date", "time"]),
+
+    bookMenu: {
+      get() {
+        return this.book.bookMenu;
+      },
+      set(bookMenu) {
+        this.updateBookMenu(bookMenu);
+      }
+    },
+    valid: {
+      get() {
+        return this.book.valid;
+      },
+      set(valid) {
+        this.updateValid(valid);
+      }
+    },
+    email: {
+      get() {
+        return this.book.email;
+      },
+      set(email) {
+        this.updateEmail(email);
+      }
+    }
+  },
+
+  async created() {
+    this.timeRange();
+    try {
+      await this.getBooks();
+    } catch (err) {
+      console.log("error: " + err.message);
+    }
   }
 };
 </script>

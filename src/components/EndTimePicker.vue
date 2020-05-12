@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="timeMenu"
+    v-model="timeMenuEnd"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-col cols="12" md="6">
         <v-text-field
-          v-model="userTime"
+          v-model="endTime"
           placeholder="Choose End Time..."
           :rules="endRules"
           color="indigo"
@@ -24,9 +24,9 @@
     </template>
 
     <v-time-picker
-      v-model="time"
+      v-model="timeEnd"
       :allowed-minutes="allowedStep"
-      @click:minute="submitTime"
+      @click:minute="submitEndTime"
       color="indigo"
       header-color="indigo"
       format="ampm"
@@ -49,40 +49,41 @@ export default {
 
   methods: {
     allowedStep: m => m % 30 === 0,
-    ...mapActions("book", [
-      "submitTime",
-      "updateTime",
-      "updateUserTime",
-      "updateTimeMenu"
+    ...mapActions("time", [
+      "submitEndTime",
+      "updateTimeEnd",
+      "updateEndTime",
+      "updateTimeMenuEnd"
     ])
   },
 
   computed: {
-    ...mapState(["book"]),
-    time: {
+    ...mapState(["time"]),
+
+    timeEnd: {
       get() {
-        return this.book.time;
+        return this.time.timeEnd;
       },
-      set(time) {
-        this.updateTime(time);
+      set(timeEnd) {
+        this.updateTimeEnd(timeEnd);
       }
     },
 
-    userTime: {
+    endTime: {
       get() {
-        return this.book.userTime;
+        return this.time.endTime;
       },
-      set(userTime) {
-        this.updateUserTime(userTime);
+      set(endTime) {
+        this.updateEndTime(endTime);
       }
     },
 
-    timeMenu: {
+    timeMenuEnd: {
       get() {
-        return this.book.timeMenu;
+        return this.time.timeMenuEnd;
       },
-      set(timeMenu) {
-        this.updateTimeMenu(timeMenu);
+      set(timeMenuEnd) {
+        this.updateTimeMenuEnd(timeMenuEnd);
       }
     }
   }

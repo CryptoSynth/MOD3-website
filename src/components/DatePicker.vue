@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="datePickerMenu"
+    v-model="dateMenu"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-col cols="12">
         <v-text-field
-          v-model="date"
+          v-model="dateInput"
           :rules="dateRules"
           color="indigo"
           :placeholder="todaysDate"
@@ -22,13 +22,14 @@
         ></v-text-field>
       </v-col>
     </template>
+
     <v-date-picker
-      :events="dates"
+      :events="date.dates"
       event-color="green lighten-1"
       :min="allowedDates"
       color="indigo"
       header-color="indigo"
-      @input="submit"
+      @input="inputDate"
       v-model="userDate"
     ></v-date-picker>
   </v-dialog>
@@ -36,49 +37,73 @@
 
 <script>
 import moment from "moment";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "date-picker",
-  props: ["events"],
+
+  props: ["availabilityTimes"],
+
   data() {
     return {
-      date: "",
-      userDate: moment().format("YYYY-MM-DD"),
-      datePickerMenu: false,
-      dates: [],
       dateRules: [v => !!v || "Date is required"]
     };
   },
-  methods: {
-    submit(input) {
-      this.date = moment(input, "YYYY-MM-DD").format("MM/DD/YYYY");
-      this.userDate = input;
-      this.$emit("dateSent", this.userDate);
-      this.$emit("reset");
-      for (let event in this.events) {
-        if (this.events[event].date === this.userDate) {
-          this.$emit("booksSent", this.events[event]);
-        }
-      }
 
-      this.datePickerMenu = !this.datePickerMenu;
-    },
-    close: () => (this.datePickerMenu = false),
-    show() {}
-  },
-  computed: {
-    allowedDates() {
-      const today = moment().format("YYYY-MM-DD");
-      return today;
-    },
-    todaysDate() {
-      const today = moment().format("MM/DD/YYYY");
-      return today;
+  methods: {
+    ...mapActions("date", [
+      "submitDate",
+      "updateDate",
+      "updateUserDate",
+      "updateDateMenu",
+      "getBookDates",
+      "availability"
+    ]),
+
+    inputDate(input) {
+      this.date.isBusy = [];
+      this.submitDate(input);
+      this.availability(this.availabilityTimes);
     }
   },
-  mounted() {
-    for (let event in this.events) {
-      this.dates.push(this.events[event].date);
+
+  computed: {
+    allowedDates: () => moment().format("YYYY-MM-DD"),
+    todaysDate: () => moment().format("MM/DD/YYYY"),
+
+    ...mapState(["date"]),
+
+    dateInput: {
+      get() {
+        return this.date.date;
+      },
+      set(date) {
+        this.updateDate(date);
+      }
+    },
+    userDate: {
+      get() {
+        return this.date.userDate;
+      },
+      set(userDate) {
+        this.updateUserDate(userDate);
+      }
+    },
+    dateMenu: {
+      get() {
+        return this.date.dateMenu;
+      },
+      set(dateMenu) {
+        this.updateDateMenu(dateMenu);
+      }
+    }
+  },
+
+  async created() {
+    try {
+      await this.getBookDates();
+    } catch (err) {
+      console.log("error: " + err.message);
     }
   }
 };
